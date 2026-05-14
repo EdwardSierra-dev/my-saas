@@ -218,29 +218,31 @@ temp/
 *.swo
 
 # ============================================
-# DOCUMENTATION (OPTIONAL - KEEP IF NEEDED)
+# DOCUMENTATION
 # ============================================
 
-# Exclude temporary/status documentation files
-STATUS-*.md
-STEP-*.md
-IMPLEMENTATION-*.md
-TESTING-*.md
-TROUBLESHOOTING.md
-INSTALL-*.md
-SETUP-*.md
-QUICK-START.md
-START-HERE.md
-READY-TO-TEST.md
+# Exclude ALL .md files created by Kiro in previous sessions
+IMPLEMENTATION-COMPLETE.md
+IMPLEMENTATION-SUMMARY.md
+INSTALL-POSTGRESQL.md
 PROJECT-STATUS.md
+QUICK-START.md
+READY-TO-TEST.md
+SETUP-FIX.md
+START-HERE.md
+STATUS-ACTUAL.md
+STEP-1-SUMMARY.md
+STEP-2-SUMMARY.md
+TESTING-GUIDE.md
+TROUBLESHOOTING.md
+context.md
+main-specs.md
+system-overview.md
 
-# Keep important documentation
+# Keep only user-created documentation
 !README.md
 !backend/README.md
 !frontend/README.md
-
-# Keep architecture and specs documentation
-!docs/**/*.md
 !modules_specs/**/*.md
 
 # ============================================
