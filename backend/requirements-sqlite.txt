@@ -1,0 +1,24 @@
+# FastAPI and ASGI server
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.6
+
+# Database (SQLite - no additional driver needed)
+sqlalchemy>=2.0.36
+alembic>=1.14.0
+
+# Authentication and Security
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-dotenv==1.0.0
+pydantic-settings==2.1.0
+
+# OAuth
+httpx==0.26.0
+
+# Validation
+pydantic>=2.10.0
+email-validator>=2.2.0
+
+# Utilities
+python-dateutil==2.8.2
