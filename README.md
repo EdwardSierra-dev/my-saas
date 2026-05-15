@@ -16,6 +16,7 @@ A modern, scalable SaaS platform designed to connect local businesses with custo
 - **Modular Architecture**: Enable/disable features based on subscription
 - **Multi-Platform**: Web and mobile applications
 - **OAuth Authentication**: Google, Microsoft, LinkedIn
+- **Onboarding Flow**: Guided module selection with 15-day free trial
 - **Multi-Tenancy**: Secure tenant isolation
 - **Real-time Features**: Chat, notifications, live updates
 - **Analytics Dashboard**: Business insights and metrics
@@ -180,20 +181,27 @@ npm test -- --coverage
 
 ### Core Modules
 - ✅ **Authentication**: OAuth, JWT, user management
+- ✅ **Onboarding**: Guided module selection with carousel
+- ✅ **Module Configuration**: Dynamic pricing and selection
 - 🚧 **Business Profile**: Business information and settings
 - 🚧 **Inventory**: Product and stock management
 - 🚧 **Orders**: Order processing and tracking
 
-### Optional Modules
-- 📋 **Billing**: Subscription and payment management
-- 📊 **Analytics**: Business insights and reporting
-- 💬 **Chat**: Real-time customer communication
-- 🔔 **Notifications**: Push and email notifications
-- 🚚 **Delivery**: Delivery tracking and management
-- ⭐ **Reviews & Ratings**: Customer feedback system
-- 🎁 **Promotions**: Discount and promotion management
-- 🤖 **Recommendations**: AI-powered product recommendations
-- 📅 **Scheduling**: Appointment booking system
+### Optional Modules (Selectable during onboarding)
+- 💬 **Chat Module** - $5/month: Customer communication without sharing personal phone
+- 🚚 **Delivery Module** - $6/month: Delivery tracking and management
+- 📦 **Inventory Module** - $6/month: Product and stock management
+- 🎁 **Promotions Module** - $4/month: Discount and promotion management
+- 🤖 **Recommendation Module** - $5/month: AI-powered product recommendations
+- 📊 **Analytics Module** - $7/month: Business insights and reporting
+- 📅 **Scheduling Module** - $5/month: Appointment booking system
+- ⭐ **Reviews & Ratings Module** - $3/month: Customer feedback system
+
+### Included by Default
+- 💳 **Billing & Subscriptions**: Payment management (included for all businesses)
+- 🔔 **Notifications**: Push and email notifications (included)
+
+**Trial Period**: All businesses get 15 days of free trial access to selected modules.
 
 Legend: ✅ Complete | 🚧 In Progress | 📋 Planned
 
@@ -230,21 +238,28 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 
 ## 📈 Roadmap
 
-### Phase 1: Foundation (Current)
+### Phase 1: Foundation ✅ (Current - Completed)
 - [x] Project structure and documentation
-- [x] Authentication module design
-- [ ] Backend core setup
-- [ ] Frontend core setup
-- [ ] Mobile app setup
-- [ ] Docker configuration
+- [x] Authentication module design and implementation
+- [x] Business registration with OAuth (Google, Microsoft, LinkedIn)
+- [x] Onboarding flow with module selection
+- [x] 15-day free trial system
+- [x] Backend core setup (FastAPI + SQLite)
+- [x] Frontend core setup (Next.js + TypeScript)
+- [x] Docker configuration
 
-### Phase 2: Core Features
-- [ ] Complete authentication flow
+### Phase 2: Core Features (In Progress)
+- [ ] Customer registration flow
+- [ ] Login page for businesses and customers
+- [ ] Logout functionality
 - [ ] Business profile management
 - [ ] Basic inventory management
 - [ ] Order processing
 
 ### Phase 3: Advanced Features
+- [ ] Real OAuth integration (replace simulated flow)
+- [ ] Email verification system
+- [ ] Password reset flow
 - [ ] Analytics dashboard
 - [ ] Real-time chat
 - [ ] Notification system
@@ -255,6 +270,7 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 - [ ] Advanced caching
 - [ ] CDN integration
 - [ ] Monitoring and logging
+- [ ] Migration to PostgreSQL for production
 
 ## 🤝 Contributing
 
