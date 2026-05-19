@@ -31,4 +31,36 @@
 
 - Las opciones en la app deben ser las mismas, lo que se debe tener en cuenta es adecuarlo responsive.
 
+### Selección de modulos / Configuración de modulos.
 
+- Despues de hacer el registro exitoso de las tiendas y negocios y que aparezca el modal de registro exitoso / bienvenido el sistema debe hacer lo siguiente:
+
+    - Mostrar un nuevo modal, puedes reutilizar el componente, pero en este modal vas a mostrar los siguientes mensajes, que el usuario podrá pasar con ayuda de un botón next que se encontrara en la parte inferior derecha:
+
+        - "Selecciona los modulos que más se ajustan a tu negocio"
+        - "Centraliza la operación de tu negocio en un solo lugar"
+        - "El control de la operaciòn al alcance de tu mano"
+
+    - El modal debe mostrar el avance de los mensajes, es decir con cada mensaje el punto debe ir cambiado de posicion para indicar cuantos mensajes hacen falta.
+
+    - Luego de estár en el último mensaje, el botón de siguiente debe cambiar a "Empecemos!"
+
+- Luego de que el usuario presione empecemos, el sistema debe mostro otro modal con los siguientes checkbox; los cuales serán los modulos que el cliente configurará para su negocio.
+
+    - Inventory Module > $6 USD/month
+    - Promotions Module > $4 USD/month
+    - Scheduling Module > $5 USD/month
+    - Delivery Module > $6 USD/month
+    - Reviews & Ratings Module > $3 USD/month
+    - Recommendation Module > $5 USD/month
+    - Analytics Module > $7 USD/month
+    - Chat Module > $5 USD/month
+
+- En la parte de abajo debe aparecer un label o un texto con el total del costo de la aplicación con los modulos que la tienda escoja.
+
+- También en la parte de abajo debe aparecer un botón continuar.
+
+- Luego de dar continuar aparecera otro modal con la siguiente info:
+    - El valor total de la configuración que seleccionó el cliente.
+    - Un texto que tendrá la siguiente leyenda:
+        - Tendras 15 días de prueba totalmente gratis, luego de este tiempo no padras utilizar los servicios y nos contacteremos contigo via correo electrónico.
