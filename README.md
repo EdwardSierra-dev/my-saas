@@ -14,9 +14,12 @@ A modern, scalable SaaS platform designed to connect local businesses with custo
 ## ✨ Key Features
 
 - **Modular Architecture**: Enable/disable features based on subscription
+- **Tab-Based Operations Screen**: Browser-like workspace with dynamic module tabs
 - **Multi-Platform**: Web and mobile applications
 - **OAuth Authentication**: Google, Microsoft, LinkedIn
 - **Onboarding Flow**: Guided module selection with 15-day free trial
+- **Chat Module**: Real-time customer communication with text, voice, images, and video
+- **Delivery Module**: Order tracking with status management and service details
 - **Multi-Tenancy**: Secure tenant isolation
 - **Real-time Features**: Chat, notifications, live updates
 - **Analytics Dashboard**: Business insights and metrics
@@ -183,13 +186,25 @@ npm test -- --coverage
 - ✅ **Authentication**: OAuth, JWT, user management
 - ✅ **Onboarding**: Guided module selection with carousel
 - ✅ **Module Configuration**: Dynamic pricing and selection
+- ✅ **Operations Screen**: Tab-based workspace with hamburger menu
+- ✅ **Chat Module**: Real-time messaging with text, voice, images, and video (30s max)
+- ✅ **Delivery Module**: Order tracking, status management, and service details
 - 🚧 **Business Profile**: Business information and settings
 - 🚧 **Inventory**: Product and stock management
 - 🚧 **Orders**: Order processing and tracking
 
 ### Optional Modules (Selectable during onboarding)
 - 💬 **Chat Module** - $5/month: Customer communication without sharing personal phone
+  - Text, voice, images, and short videos
+  - 72-hour chat retention after service completion
+  - WhatsApp-like voice recording (hold to record, swipe to cancel)
+  - Service-based chat availability
 - 🚚 **Delivery Module** - $6/month: Delivery tracking and management
+  - Order status tracking (Received, In Progress, Delivered, Returned)
+  - 48-hour visibility window
+  - Support for physical deliveries and intangible services
+  - Auto-incremental order IDs
+  - Detailed order modals
 - 📦 **Inventory Module** - $6/month: Product and stock management
 - 🎁 **Promotions Module** - $4/month: Discount and promotion management
 - 🤖 **Recommendation Module** - $5/month: AI-powered product recommendations

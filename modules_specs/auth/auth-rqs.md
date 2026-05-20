@@ -64,3 +64,19 @@
     - El valor total de la configuración que seleccionó el cliente.
     - Un texto que tendrá la siguiente leyenda:
         - Tendras 15 días de prueba totalmente gratis, luego de este tiempo no padras utilizar los servicios y nos contacteremos contigo via correo electrónico.
+
+-------------------------------------------------------------------------------
+
+## Login / Customer
+
+### Link usuario y contraseña
+
+- El link de usuario y contraseña que aparece al momento de escoger el provider de cuentas (gmail, outlook, linkedin) debe funcionar de la siguiente manera:
+    - Al dar clic se debe abrir otro modal con:
+        - Usuario (que debe ser un correo)
+        - Contraseña
+        - Botón ingresar
+- Se de debe permitir el ingreso a usuarios no registrados.
+- El sistema debe detectar si el correo ingresado pertenece a una tienda o a un usuario normal
+    - Debe aparecer un pop-up informando que ese usuario pertenece a la tienda tal y que si desea continuar.
+    - Se debe tener en cuenta la seguridad de los input que no permite SQL Iyeccion u otra formas de penetración.
