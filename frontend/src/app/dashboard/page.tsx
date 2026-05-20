@@ -6,6 +6,7 @@ import OperationsLayout from "@/components/operations/OperationsLayout";
 import ChatModule from "@/components/operations/modules/ChatModule";
 import DeliveryModule from "@/components/operations/modules/DeliveryModule";
 import InventoryModule from "@/components/operations/modules/InventoryModule";
+import AnalyticsModule from "@/components/operations/modules/AnalyticsModule";
 
 // Module icons
 const ChatIcon = () => (
@@ -56,6 +57,9 @@ export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [activeModule, setActiveModule] = useState("chat");
+  
+  // TODO: Get this from user's subscription in database
+  const analyticsTier: "basic" | "advanced" | "premium" = "premium";
 
   // TODO: Get enabled modules from user's subscription
   const enabledModules = [
@@ -94,14 +98,7 @@ export default function Dashboard() {
       case "inventory":
         return <InventoryModule />;
       case "analytics":
-        return (
-          <div className="h-full flex items-center justify-center text-gray-500">
-            <div className="text-center">
-              <AnalyticsIcon />
-              <p className="mt-4">Analytics Module - Coming Soon</p>
-            </div>
-          </div>
-        );
+        return <AnalyticsModule tier={analyticsTier} />;
       default:
         return null;
     }

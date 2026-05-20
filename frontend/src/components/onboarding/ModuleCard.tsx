@@ -38,8 +38,14 @@ export default function ModuleCard({
           </div>
         </div>
         <div className="text-right">
-          <p className="font-bold text-primary-600">${price}</p>
-          <p className="text-xs text-gray-500">USD/month</p>
+          {price > 0 ? (
+            <>
+              <p className="font-bold text-primary-600">${price}</p>
+              <p className="text-xs text-gray-500">USD/month</p>
+            </>
+          ) : (
+            <p className="text-sm font-medium text-gray-600">Select tier</p>
+          )}
         </div>
       </label>
 
