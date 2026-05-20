@@ -56,6 +56,16 @@ export default function InventoryModule() {
   const [showLowStockModal, setShowLowStockModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  // Edit form state
+  const [editData, setEditData] = useState({
+    name: "",
+    price: "",
+    cost: "",
+    stock: "",
+    minStockAlert: "",
+  });
 
   // Form state
   const [formData, setFormData] = useState({
@@ -82,18 +92,61 @@ export default function InventoryModule() {
     const newProduct: Product = {
       id: products.length + 1,
       name: formData.name,
-      price: parseFloat(formData.price),
+      price: Number(formData.price), // Use Number() for precise conversion
       type: formData.type,
-      cost: formData.cost ? parseFloat(formData.cost) : undefined,
-      stock: formData.stock ? parseInt(formData.stock) : undefined,
+      cost: formData.cost ? Number(formData.cost) : undefined,
+      stock: formData.stock ? parseInt(formData.stock, 10) : undefined,
       minStockAlert: formData.enableMinStock && formData.minStockAlert
-        ? parseInt(formData.minStockAlert)
+        ? parseInt(formData.minStockAlert, 10)
         : undefined,
     };
 
     setProducts([...products, newProduct]);
     setShowCreateModal(false);
     resetForm();
+  };
+
+  const handleUpdateProduct = () => {
+    if (!selectedProduct) return;
+
+    const updatedProduct: Product = {
+      ...selectedProduct,
+      name: editData.name,
+      price: Number(editData.price),
+      cost: editData.cost ? Number(editData.cost) : undefined,
+      stock: editData.stock ? parseInt(editData.stock, 10) : undefined,
+      minStockAlert: editData.minStockAlert
+        ? parseInt(editData.minStockAlert, 10)
+        : undefined,
+    };
+
+    setProducts(
+      products.map((p) => (p.id === selectedProduct.id ? updatedProduct : p))
+    );
+    setSelectedProduct(updatedProduct);
+    setIsEditMode(false);
+  };
+
+  const startEditMode = (product: Product) => {
+    setEditData({
+      name: product.name,
+      price: product.price.toString(),
+      cost: product.cost?.toString() || "",
+      stock: product.stock?.toString() || "",
+      minStockAlert: product.minStockAlert?.toString() || "",
+    });
+    setIsEditMode(true);
+  };
+
+  const cancelEdit = () => {
+    setIsEditMode(false);
+    setEditData({
+      name: "",
+      price: "",
+      cost: "",
+      stock: "",
+      minStockAlert: "",
+    });
   };
 
   const handleDeleteProduct = () => {
@@ -119,6 +172,7 @@ export default function InventoryModule() {
 
   const openDetailModal = (product: Product) => {
     setSelectedProduct(product);
+    setIsEditMode(false);
     setShowDetailModal(true);
   };
 
@@ -547,15 +601,16 @@ export default function InventoryModule() {
       {/* Product Detail Modal */}
       {showDetailModal && selectedProduct && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900 bg-opacity-50 backdrop-blur-sm">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-2xl font-bold text-gray-900">
-                Product Details
+                {isEditMode ? "Edit Product" : "Product Details"}
               </h3>
               <button
                 onClick={() => {
                   setShowDetailModal(false);
                   setSelectedProduct(null);
+                  setIsEditMode(false);
                 }}
                 className="text-gray-400 hover:text-gray-600"
               >
@@ -575,20 +630,129 @@ export default function InventoryModule() {
               </button>
             </div>
 
-            <div className="space-y-4">
-              {/* Image Placeholder */}
-              <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
-                {selectedProduct.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={selectedProduct.image}
-                    alt={selectedProduct.name}
-                    className="w-full h-full object-cover rounded-lg"
-                  />
-                ) : (
-                  <div className="text-center">
+            {!isEditMode ? (
+              /* View Mode */
+              <div className="space-y-4">
+                {/* Image Placeholder */}
+                <div className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center">
+                  {selectedProduct.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={selectedProduct.image}
+                      alt={selectedProduct.name}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                  ) : (
+                    <div className="text-center">
+                      <svg
+                        className="w-16 h-16 mx-auto text-gray-300"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
+                      </svg>
+                      <p className="text-sm text-gray-500 mt-2">No image uploaded</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Details */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-500">Name</p>
+                    <p className="font-semibold text-gray-900">
+                      {selectedProduct.name}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Type</p>
+                    <span
+                      className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
+                        selectedProduct.type === "product"
+                          ? "bg-blue-100 text-blue-800"
+                          : "bg-purple-100 text-purple-800"
+                      }`}
+                    >
+                      {selectedProduct.type === "product" ? "Product" : "Service"}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Price</p>
+                    <p className="font-semibold text-gray-900">
+                      ${selectedProduct.price.toLocaleString()} COP
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Cost</p>
+                    <p className="font-semibold text-gray-900">
+                      {selectedProduct.cost
+                        ? `$${selectedProduct.cost.toLocaleString()} COP`
+                        : "N/A"}
+                    </p>
+                  </div>
+                  {selectedProduct.stock !== undefined && (
+                    <>
+                      <div>
+                        <p className="text-sm text-gray-500">Current Stock</p>
+                        <p
+                          className={`font-semibold ${
+                            selectedProduct.minStockAlert &&
+                            selectedProduct.stock <= selectedProduct.minStockAlert
+                              ? "text-red-600"
+                              : "text-gray-900"
+                          }`}
+                        >
+                          {selectedProduct.stock}
+                        </p>
+                      </div>
+                      {selectedProduct.minStockAlert && (
+                        <div>
+                          <p className="text-sm text-gray-500">Min Stock Alert</p>
+                          <p className="font-semibold text-gray-900">
+                            {selectedProduct.minStockAlert}
+                          </p>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+
+                {/* Profit Margin */}
+                {selectedProduct.cost && (
+                  <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                    <p className="text-sm font-semibold text-green-900 mb-1">
+                      Profit Margin
+                    </p>
+                    <p className="text-2xl font-bold text-green-600">
+                      $
+                      {(selectedProduct.price - selectedProduct.cost).toLocaleString()}{" "}
+                      COP
+                    </p>
+                    <p className="text-xs text-green-700 mt-1">
+                      {(
+                        ((selectedProduct.price - selectedProduct.cost) /
+                          selectedProduct.cost) *
+                        100
+                      ).toFixed(1)}
+                      % margin
+                    </p>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex gap-3 pt-4">
+                  <button
+                    onClick={() => startEditMode(selectedProduct)}
+                    className="flex-1 px-6 py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-colors flex items-center justify-center gap-2"
+                  >
                     <svg
-                      className="w-16 h-16 mx-auto text-gray-300"
+                      className="w-5 h-5"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -597,107 +761,149 @@ export default function InventoryModule() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         strokeWidth={2}
-                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
                       />
                     </svg>
-                    <p className="text-sm text-gray-500 mt-2">No image uploaded</p>
-                  </div>
-                )}
-              </div>
-
-              {/* Details */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-500">Name</p>
-                  <p className="font-semibold text-gray-900">
-                    {selectedProduct.name}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Type</p>
-                  <span
-                    className={`inline-flex px-3 py-1 text-xs font-semibold rounded-full ${
-                      selectedProduct.type === "product"
-                        ? "bg-blue-100 text-blue-800"
-                        : "bg-purple-100 text-purple-800"
-                    }`}
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowDetailModal(false);
+                      setSelectedProduct(null);
+                    }}
+                    className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors"
                   >
-                    {selectedProduct.type === "product" ? "Product" : "Service"}
-                  </span>
+                    Close
+                  </button>
                 </div>
+              </div>
+            ) : (
+              /* Edit Mode */
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleUpdateProduct();
+                }}
+                className="space-y-4"
+              >
+                {/* Name */}
                 <div>
-                  <p className="text-sm text-gray-500">Price</p>
-                  <p className="font-semibold text-gray-900">
-                    ${selectedProduct.price.toLocaleString()} COP
-                  </p>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editData.name}
+                    onChange={(e) =>
+                      setEditData({ ...editData, name: e.target.value })
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  />
                 </div>
+
+                {/* Price */}
                 <div>
-                  <p className="text-sm text-gray-500">Cost</p>
-                  <p className="font-semibold text-gray-900">
-                    {selectedProduct.cost
-                      ? `$${selectedProduct.cost.toLocaleString()} COP`
-                      : "N/A"}
-                  </p>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Price
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    step="1"
+                    min="0"
+                    value={editData.price}
+                    onChange={(e) =>
+                      setEditData({ ...editData, price: e.target.value })
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  />
                 </div>
-                {selectedProduct.stock !== undefined && (
-                  <>
-                    <div>
-                      <p className="text-sm text-gray-500">Current Stock</p>
-                      <p
-                        className={`font-semibold ${
-                          selectedProduct.minStockAlert &&
-                          selectedProduct.stock <= selectedProduct.minStockAlert
-                            ? "text-red-600"
-                            : "text-gray-900"
-                        }`}
-                      >
-                        {selectedProduct.stock}
+
+                {/* Cost */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Cost
+                  </label>
+                  <input
+                    type="number"
+                    step="1"
+                    min="0"
+                    value={editData.cost}
+                    onChange={(e) =>
+                      setEditData({ ...editData, cost: e.target.value })
+                    }
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                  />
+                  {editData.cost && Number(editData.cost) > 0 && (
+                    <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                      <p className="text-sm text-blue-800">
+                        <strong>Recommended Price:</strong>{" "}
+                        ${calculateRecommendedPrice(Number(editData.cost)).min.toLocaleString()} - $
+                        {calculateRecommendedPrice(Number(editData.cost)).max.toLocaleString()} COP
                       </p>
                     </div>
-                    {selectedProduct.minStockAlert && (
-                      <div>
-                        <p className="text-sm text-gray-500">Min Stock Alert</p>
-                        <p className="font-semibold text-gray-900">
-                          {selectedProduct.minStockAlert}
-                        </p>
-                      </div>
-                    )}
+                  )}
+                </div>
+
+                {/* Stock (only for products) */}
+                {selectedProduct.type === "product" && (
+                  <>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Stock
+                      </label>
+                      <input
+                        type="number"
+                        step="1"
+                        min="0"
+                        value={editData.stock}
+                        onChange={(e) =>
+                          setEditData({ ...editData, stock: e.target.value })
+                        }
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Minimum Stock Alert
+                      </label>
+                      <input
+                        type="number"
+                        step="1"
+                        min="0"
+                        value={editData.minStockAlert}
+                        onChange={(e) =>
+                          setEditData({
+                            ...editData,
+                            minStockAlert: e.target.value,
+                          })
+                        }
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                      />
+                    </div>
                   </>
                 )}
-              </div>
 
-              {/* Profit Margin */}
-              {selectedProduct.cost && (
-                <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-                  <p className="text-sm font-semibold text-green-900 mb-1">
-                    Profit Margin
-                  </p>
-                  <p className="text-2xl font-bold text-green-600">
-                    $
-                    {(selectedProduct.price - selectedProduct.cost).toLocaleString()}{" "}
-                    COP
-                  </p>
-                  <p className="text-xs text-green-700 mt-1">
-                    {(
-                      ((selectedProduct.price - selectedProduct.cost) /
-                        selectedProduct.cost) *
-                      100
-                    ).toFixed(1)}
-                    % margin
-                  </p>
+                {/* Action Buttons */}
+                <div className="flex gap-3 pt-4">
+                  <button
+                    type="button"
+                    onClick={cancelEdit}
+                    className="flex-1 px-6 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 px-6 py-3 bg-primary-600 text-white font-semibold rounded-xl hover:bg-primary-700 transition-colors"
+                  >
+                    Save Changes
+                  </button>
                 </div>
-              )}
-            </div>
-
-            <button
-              onClick={() => {
-                setShowDetailModal(false);
-                setSelectedProduct(null);
-              }}
-              className="w-full mt-6 btn-primary py-3"
-            >
-              Close
-            </button>
+              </form>
+            )}
           </div>
         </div>
       )}

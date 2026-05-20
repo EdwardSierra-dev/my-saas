@@ -190,6 +190,14 @@ npm test -- --coverage
 - ✅ **Chat Module**: Real-time messaging with text, voice, images, and video (30s max)
 - ✅ **Delivery Module**: Order tracking, status management, and service details
 - ✅ **Inventory Module**: Products and services management with stock alerts
+  - Manage physical products and intangible services
+  - **Edit products directly from detail modal**
+  - Automatic price recommendations (20-35% profit margin)
+  - Stock tracking with low-stock alerts
+  - Product images with optimization
+  - Double confirmation for deletion
+  - Profit margin calculations
+  - **Precise currency handling** (no floating-point errors)
 - 🚧 **Business Profile**: Business information and settings
 - 🚧 **Orders**: Order processing and tracking
 
@@ -207,11 +215,13 @@ npm test -- --coverage
   - Detailed order modals
 - 📦 **Inventory Module** - $6/month: Product and stock management
   - Manage physical products and intangible services
+  - **Edit mode in product details modal**
   - Automatic price recommendations (20-35% profit margin)
   - Stock tracking with low-stock alerts
   - Product images with optimization
   - Double confirmation for deletion
   - Profit margin calculations
+  - **Integer-based currency handling** for precision
 - 🎁 **Promotions Module** - $4/month: Discount and promotion management
 - 🤖 **Recommendation Module** - $5/month: AI-powered product recommendations
 - 📊 **Analytics Module** - $7/month: Business insights and reporting
