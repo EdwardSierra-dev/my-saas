@@ -189,8 +189,8 @@ npm test -- --coverage
 - ✅ **Operations Screen**: Tab-based workspace with hamburger menu
 - ✅ **Chat Module**: Real-time messaging with text, voice, images, and video (30s max)
 - ✅ **Delivery Module**: Order tracking, status management, and service details
+- ✅ **Inventory Module**: Products and services management with stock alerts
 - 🚧 **Business Profile**: Business information and settings
-- 🚧 **Inventory**: Product and stock management
 - 🚧 **Orders**: Order processing and tracking
 
 ### Optional Modules (Selectable during onboarding)
@@ -206,6 +206,12 @@ npm test -- --coverage
   - Auto-incremental order IDs
   - Detailed order modals
 - 📦 **Inventory Module** - $6/month: Product and stock management
+  - Manage physical products and intangible services
+  - Automatic price recommendations (20-35% profit margin)
+  - Stock tracking with low-stock alerts
+  - Product images with optimization
+  - Double confirmation for deletion
+  - Profit margin calculations
 - 🎁 **Promotions Module** - $4/month: Discount and promotion management
 - 🤖 **Recommendation Module** - $5/month: AI-powered product recommendations
 - 📊 **Analytics Module** - $7/month: Business insights and reporting

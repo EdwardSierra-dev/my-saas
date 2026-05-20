@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import OperationsLayout from "@/components/operations/OperationsLayout";
 import ChatModule from "@/components/operations/modules/ChatModule";
 import DeliveryModule from "@/components/operations/modules/DeliveryModule";
+import InventoryModule from "@/components/operations/modules/InventoryModule";
 
 // Module icons
 const ChatIcon = () => (
@@ -91,14 +92,7 @@ export default function Dashboard() {
       case "delivery":
         return <DeliveryModule />;
       case "inventory":
-        return (
-          <div className="h-full flex items-center justify-center text-gray-500">
-            <div className="text-center">
-              <InventoryIcon />
-              <p className="mt-4">Inventory Module - Coming Soon</p>
-            </div>
-          </div>
-        );
+        return <InventoryModule />;
       case "analytics":
         return (
           <div className="h-full flex items-center justify-center text-gray-500">
