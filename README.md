@@ -224,7 +224,26 @@ npm test -- --coverage
   - **Integer-based currency handling** for precision
 - 🎁 **Promotions Module** - $4/month: Discount and promotion management
 - 🤖 **Recommendation Module** - $5/month: AI-powered product recommendations
-- 📊 **Analytics Module** - $7/month: Business insights and reporting
+- 📊 **Analytics Module** - Tiered pricing with expandable features:
+  - **Basic Analytics** ($7/month): Essential metrics
+    - Total Revenue & Orders
+    - Top 10 Products/Services
+    - Active Customers Count
+    - Basic Sales Trends
+  - **Advanced Analytics** ($12/month): Includes Basic + intermediate analysis
+    - Everything in Basic
+    - Customer Retention & CLV
+    - Inventory Performance
+    - Delivery Metrics
+    - Period Comparisons
+    - Profit Margin Analysis
+  - **Premium Analytics** ($18/month): Includes Advanced + ML predictions
+    - Everything in Advanced
+    - AI Sales Predictions
+    - Customer Segmentation
+    - Cohort Analysis
+    - Automated Recommendations
+    - Custom Reports & Exports
 - 📅 **Scheduling Module** - $5/month: Appointment booking system
 - ⭐ **Reviews & Ratings Module** - $3/month: Customer feedback system
 

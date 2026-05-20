@@ -14,6 +14,7 @@ export default function RegistrationSuccess() {
   const [currentStep, setCurrentStep] = useState<OnboardingStep>("success");
   const [selectedModules, setSelectedModules] = useState<string[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [analyticsTier, setAnalyticsTier] = useState<string | undefined>();
 
   useEffect(() => {
     if (currentStep === "success") {
@@ -45,8 +46,9 @@ export default function RegistrationSuccess() {
     setCurrentStep("intro");
   };
 
-  const handleModulesComplete = (modules: string[]) => {
+  const handleModulesComplete = (modules: string[], tier?: string) => {
     setSelectedModules(modules);
+    setAnalyticsTier(tier);
     
     // Calculate total price
     const modulePrices: Record<string, number> = {
@@ -55,12 +57,27 @@ export default function RegistrationSuccess() {
       inventory: 6,
       promotions: 4,
       recommendation: 5,
-      analytics: 7,
+      analytics: 0, // Will be added from tier
       scheduling: 5,
       reviews: 3,
     };
+
+    const analyticsTierPrices: Record<string, number> = {
+      "analytics-basic": 7,
+      "analytics-advanced": 12,
+      "analytics-premium": 18,
+    };
     
-    const total = modules.reduce((sum, moduleId) => sum + (modulePrices[moduleId] || 0), 0);
+    let total = modules.reduce((sum, moduleId) => {
+      if (moduleId === "analytics") return sum;
+      return sum + (modulePrices[moduleId] || 0);
+    }, 0);
+
+    // Add analytics tier price if selected
+    if (modules.includes("analytics") && tier) {
+      total += analyticsTierPrices[tier] || 0;
+    }
+    
     setTotalPrice(total);
     
     setCurrentStep("confirmation");
@@ -158,6 +175,7 @@ export default function RegistrationSuccess() {
         <ConfirmationModal
           selectedModules={selectedModules}
           totalPrice={totalPrice}
+          analyticsTier={analyticsTier}
         />
       )}
     </>

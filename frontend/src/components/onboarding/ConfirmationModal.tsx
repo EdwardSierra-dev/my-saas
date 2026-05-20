@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 interface ConfirmationModalProps {
   selectedModules: string[];
   totalPrice: number;
+  analyticsTier?: string;
 }
 
 const moduleNames: Record<string, string> = {
@@ -18,9 +19,16 @@ const moduleNames: Record<string, string> = {
   reviews: "Reviews & Ratings Module",
 };
 
+const analyticsTierNames: Record<string, string> = {
+  "analytics-basic": "Basic Analytics",
+  "analytics-advanced": "Advanced Analytics",
+  "analytics-premium": "Premium Analytics",
+};
+
 export default function ConfirmationModal({
   selectedModules,
   totalPrice,
+  analyticsTier,
 }: ConfirmationModalProps) {
   const router = useRouter();
 
@@ -59,24 +67,31 @@ export default function ConfirmationModal({
           <h3 className="font-semibold text-gray-900 mb-3">Selected Modules:</h3>
           <div className="space-y-2 max-h-[200px] overflow-y-auto">
             {selectedModules.map((moduleId) => (
-              <div
-                key={moduleId}
-                className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg"
-              >
-                <svg
-                  className="w-5 h-5 text-primary-600"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                <span className="text-gray-700">{moduleNames[moduleId]}</span>
+              <div key={moduleId}>
+                <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg">
+                  <svg
+                    className="w-5 h-5 text-primary-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                  <span className="text-gray-700">{moduleNames[moduleId]}</span>
+                </div>
+                {/* Show Analytics Tier if selected */}
+                {moduleId === "analytics" && analyticsTier && (
+                  <div className="ml-8 mt-1 p-2 bg-blue-50 rounded-lg border border-blue-200">
+                    <span className="text-sm text-blue-800">
+                      → {analyticsTierNames[analyticsTier]}
+                    </span>
+                  </div>
+                )}
               </div>
             ))}
           </div>

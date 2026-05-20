@@ -8,10 +8,11 @@ interface Module {
   name: string;
   price: number;
   tooltip?: string;
+  hasSubOptions?: boolean;
 }
 
 interface ModulesSelectionModalProps {
-  onComplete: (selectedModules: string[]) => void;
+  onComplete: (selectedModules: string[], analyticsTier?: string) => void;
   onBack: () => void;
 }
 
@@ -27,7 +28,12 @@ const availableModules: Module[] = [
   { id: "inventory", name: "Inventory Module", price: 6 },
   { id: "promotions", name: "Promotions Module", price: 4 },
   { id: "recommendation", name: "Recommendation Module", price: 5 },
-  { id: "analytics", name: "Analytics Module", price: 7 },
+  {
+    id: "analytics",
+    name: "Analytics Module",
+    price: 0, // Base price, will be determined by tier selection
+    hasSubOptions: true,
+  },
   { id: "scheduling", name: "Scheduling Module", price: 5 },
   { id: "reviews", name: "Reviews & Ratings Module", price: 3 },
 ];
@@ -37,6 +43,50 @@ export default function ModulesSelectionModal({
   onBack,
 }: ModulesSelectionModalProps) {
   const [selectedModules, setSelectedModules] = useState<Set<string>>(new Set());
+  const [analyticsTier, setAnalyticsTier] = useState<string | null>(null);
+
+  const analyticsTiers = [
+    {
+      id: "analytics-basic",
+      name: "Basic Analytics",
+      price: 7,
+      description: "Essential metrics for daily operations",
+      features: [
+        "Total Revenue & Orders",
+        "Top 10 Products/Services",
+        "Active Customers Count",
+        "Basic Sales Trends",
+      ],
+    },
+    {
+      id: "analytics-advanced",
+      name: "Advanced Analytics",
+      price: 12,
+      description: "Includes Basic + intermediate analysis",
+      features: [
+        "Everything in Basic",
+        "Customer Retention & CLV",
+        "Inventory Performance",
+        "Delivery Metrics",
+        "Period Comparisons",
+        "Profit Margin Analysis",
+      ],
+    },
+    {
+      id: "analytics-premium",
+      name: "Premium Analytics",
+      price: 18,
+      description: "Includes Advanced + ML predictions",
+      features: [
+        "Everything in Advanced",
+        "AI Sales Predictions",
+        "Customer Segmentation",
+        "Cohort Analysis",
+        "Automated Recommendations",
+        "Custom Reports & Exports",
+      ],
+    },
+  ];
 
   const toggleModule = (moduleId: string) => {
     setSelectedModules((prev) => {
@@ -51,14 +101,29 @@ export default function ModulesSelectionModal({
   };
 
   const calculateTotal = () => {
-    return availableModules
-      .filter((module) => selectedModules.has(module.id))
+    let total = availableModules
+      .filter((module) => selectedModules.has(module.id) && module.id !== "analytics")
       .reduce((sum, module) => sum + module.price, 0);
+
+    // Add analytics tier price if selected
+    if (selectedModules.has("analytics") && analyticsTier) {
+      const tier = analyticsTiers.find((t) => t.id === analyticsTier);
+      if (tier) {
+        total += tier.price;
+      }
+    }
+
+    return total;
   };
 
   const handleContinue = () => {
     if (selectedModules.size > 0) {
-      onComplete(Array.from(selectedModules));
+      // If analytics is selected but no tier chosen, don't proceed
+      if (selectedModules.has("analytics") && !analyticsTier) {
+        alert("Please select an Analytics tier");
+        return;
+      }
+      onComplete(Array.from(selectedModules), analyticsTier || undefined);
     }
   };
 
@@ -81,15 +146,81 @@ export default function ModulesSelectionModal({
         {/* Modules Grid */}
         <div className="space-y-3 mb-6 max-h-[400px] overflow-y-auto pr-2">
           {availableModules.map((module) => (
-            <ModuleCard
-              key={module.id}
-              name={module.name}
-              price={module.price}
-              isSelected={selectedModules.has(module.id)}
-              onToggle={() => toggleModule(module.id)}
-              showTooltip={!!module.tooltip}
-              tooltipContent={module.tooltip}
-            />
+            <div key={module.id}>
+              <ModuleCard
+                name={module.name}
+                price={module.price}
+                isSelected={selectedModules.has(module.id)}
+                onToggle={() => toggleModule(module.id)}
+                showTooltip={!!module.tooltip}
+                tooltipContent={module.tooltip}
+              />
+
+              {/* Analytics Tiers - Show when Analytics is selected */}
+              {module.id === "analytics" && selectedModules.has("analytics") && (
+                <div className="ml-8 mt-3 space-y-2 border-l-2 border-primary-200 pl-4">
+                  <p className="text-sm font-semibold text-gray-700 mb-3">
+                    Select Analytics Tier:
+                  </p>
+                  {analyticsTiers.map((tier) => (
+                    <label
+                      key={tier.id}
+                      className={`block p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                        analyticsTier === tier.id
+                          ? "border-primary-600 bg-primary-50"
+                          : "border-gray-200 hover:border-gray-300"
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <input
+                          type="radio"
+                          name="analytics-tier"
+                          checked={analyticsTier === tier.id}
+                          onChange={() => setAnalyticsTier(tier.id)}
+                          className="mt-1 w-4 h-4 text-primary-600"
+                        />
+                        <div className="flex-1">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-semibold text-gray-900">
+                              {tier.name}
+                            </h4>
+                            <span className="font-bold text-primary-600">
+                              ${tier.price}/month
+                            </span>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-2">
+                            {tier.description}
+                          </p>
+                          <ul className="space-y-1">
+                            {tier.features.map((feature, idx) => (
+                              <li
+                                key={idx}
+                                className="text-xs text-gray-700 flex items-start gap-2"
+                              >
+                                <svg
+                                  className="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                                {feature}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
           ))}
         </div>
 
