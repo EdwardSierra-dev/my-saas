@@ -224,26 +224,27 @@ npm test -- --coverage
   - **Integer-based currency handling** for precision
 - 🎁 **Promotions Module** - $4/month: Discount and promotion management
 - 🤖 **Recommendation Module** - $5/month: AI-powered product recommendations
-- 📊 **Analytics Module** - Tiered pricing with expandable features:
+- ✅ **Analytics Module** - Tiered pricing with expandable features:
   - **Basic Analytics** ($7/month): Essential metrics
     - Total Revenue & Orders
     - Top 10 Products/Services
     - Active Customers Count
-    - Basic Sales Trends
+    - Basic Sales Trends (7-day chart with hover tooltips)
   - **Advanced Analytics** ($12/month): Includes Basic + intermediate analysis
     - Everything in Basic
     - Customer Retention & CLV
     - Inventory Performance
-    - Delivery Metrics
-    - Period Comparisons
+    - Churn Rate Analysis
+    - Period Comparisons (Today/Week/Month)
     - Profit Margin Analysis
   - **Premium Analytics** ($18/month): Includes Advanced + ML predictions
     - Everything in Advanced
-    - AI Sales Predictions
-    - Customer Segmentation
+    - AI Sales Predictions (Next week forecast)
+    - Customer Segmentation (VIP, Regular, Occasional, At Risk)
     - Cohort Analysis
     - Automated Recommendations
     - Custom Reports & Exports
+  - **Note**: Currently displays mock data for demonstration. Real-time data integration pending.
 - 📅 **Scheduling Module** - $5/month: Appointment booking system
 - ⭐ **Reviews & Ratings Module** - $3/month: Customer feedback system
 
@@ -288,32 +289,40 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 
 ## 📈 Roadmap
 
-### Phase 1: Foundation ✅ (Current - Completed)
+### Phase 1: Foundation ✅ (Completed)
 - [x] Project structure and documentation
 - [x] Authentication module design and implementation
 - [x] Business registration with OAuth (Google, Microsoft, LinkedIn)
-- [x] Onboarding flow with module selection
+- [x] Onboarding flow with module selection and tiered pricing
 - [x] 15-day free trial system
 - [x] Backend core setup (FastAPI + SQLite)
 - [x] Frontend core setup (Next.js + TypeScript)
 - [x] Docker configuration
+- [x] Operations Screen with tab-based navigation
+- [x] Chat Module (text, voice, images, video)
+- [x] Delivery Module (order tracking and status management)
+- [x] Inventory Module (products/services with edit capability and precise currency handling)
+- [x] Analytics Module (3-tier pricing: Basic, Advanced, Premium with mock data)
 
 ### Phase 2: Core Features (In Progress)
 - [ ] Customer registration flow
 - [ ] Login page for businesses and customers
 - [ ] Logout functionality
 - [ ] Business profile management
-- [ ] Basic inventory management
 - [ ] Order processing
+- [ ] Connect Analytics Module with real data from Inventory and Delivery modules
 
 ### Phase 3: Advanced Features
 - [ ] Real OAuth integration (replace simulated flow)
 - [ ] Email verification system
 - [ ] Password reset flow
-- [ ] Analytics dashboard
-- [ ] Real-time chat
+- [ ] Real-time chat with WebSockets
 - [ ] Notification system
-- [ ] Payment integration
+- [ ] Payment integration (Stripe/PayPal)
+- [ ] Promotions Module implementation
+- [ ] Recommendation Module with AI
+- [ ] Scheduling Module for appointments
+- [ ] Reviews & Ratings Module
 
 ### Phase 4: Optimization
 - [ ] Performance optimization
