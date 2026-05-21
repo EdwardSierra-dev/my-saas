@@ -184,6 +184,10 @@ npm test -- --coverage
 
 ### Core Modules
 - ✅ **Authentication**: OAuth, JWT, user management
+  - Business registration with OAuth (Google, Microsoft, LinkedIn)
+  - **Customer registration with email/password and OAuth**
+  - **Customer login system**
+  - Customer preferences for personalized recommendations
 - ✅ **Onboarding**: Guided module selection with carousel
 - ✅ **Module Configuration**: Dynamic pricing and selection
 - ✅ **Operations Screen**: Tab-based workspace with hamburger menu
@@ -198,6 +202,8 @@ npm test -- --coverage
   - Double confirmation for deletion
   - Profit margin calculations
   - **Precise currency handling** (no floating-point errors)
+- ✅ **Analytics Module**: 3-tier pricing (Basic, Advanced, Premium) with mock data
+- 🚧 **Customer Dashboard**: Basic customer interface (placeholder)
 - 🚧 **Business Profile**: Business information and settings
 - 🚧 **Orders**: Order processing and tracking
 
@@ -293,6 +299,9 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 - [x] Project structure and documentation
 - [x] Authentication module design and implementation
 - [x] Business registration with OAuth (Google, Microsoft, LinkedIn)
+- [x] **Customer registration with email/password and OAuth**
+- [x] **Customer login system**
+- [x] **Customer preferences system (Beauty, Fast Food, Pharmacy, Specialists)**
 - [x] Onboarding flow with module selection and tiered pricing
 - [x] 15-day free trial system
 - [x] Backend core setup (FastAPI + SQLite)
@@ -303,12 +312,23 @@ NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1
 - [x] Delivery Module (order tracking and status management)
 - [x] Inventory Module (products/services with edit capability and precise currency handling)
 - [x] Analytics Module (3-tier pricing: Basic, Advanced, Premium with mock data)
+- [x] **Customer Dashboard (basic placeholder)**
 
 ### Phase 2: Core Features (In Progress)
-- [ ] Customer registration flow
-- [ ] Login page for businesses and customers
-- [ ] Logout functionality
+- [x] Customer registration flow (email/password and OAuth)
+- [x] Customer login page
+- [x] Customer preferences system
+- [ ] Business login page
+- [ ] Logout functionality for both business and customers
 - [ ] Business profile management
+- [ ] Customer features:
+  - [ ] Search businesses and specialists by name/category
+  - [ ] Favorites system (max 10 items)
+  - [ ] Purchase history view
+  - [ ] Chat with businesses (following Chat Module rules)
+  - [ ] Delivery tracking for customers
+  - [ ] Reviews and ratings system
+  - [ ] Customer profile management (change photo, password)
 - [ ] Order processing
 - [ ] Connect Analytics Module with real data from Inventory and Delivery modules
 

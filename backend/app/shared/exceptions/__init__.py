@@ -7,6 +7,7 @@ from .base import (
     AuthenticationError,
     AuthorizationError,
     ConflictError,
+    UnauthorizedError,
 )
 
 __all__ = [
@@ -16,4 +17,5 @@ __all__ = [
     "AuthenticationError",
     "AuthorizationError",
     "ConflictError",
+    "UnauthorizedError",
 ]

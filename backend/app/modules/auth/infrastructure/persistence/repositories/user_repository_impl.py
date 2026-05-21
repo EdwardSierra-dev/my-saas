@@ -32,6 +32,10 @@ class UserRepositoryImpl(UserRepository):
         ).first()
         return self._to_entity(model) if model else None
     
+    def find_by_email(self, email: str) -> Optional[User]:
+        """Find user by email (alias for get_by_email)."""
+        return self.get_by_email(email)
+    
     def create(self, user: User) -> User:
         """Create a new user."""
         model = UserModel(
@@ -51,6 +55,13 @@ class UserRepositoryImpl(UserRepository):
         self.db.refresh(model)
         
         return self._to_entity(model)
+    
+    def save(self, user: User) -> User:
+        """Save a user (create if new, update if exists)."""
+        if user.id is None:
+            return self.create(user)
+        else:
+            return self.update(user)
     
     def update(self, user: User) -> User:
         """Update existing user."""
@@ -83,6 +94,14 @@ class UserRepositoryImpl(UserRepository):
         ).offset(skip).limit(limit).all()
         
         return [self._to_entity(m) for m in models]
+    
+    def find_by_tenant_id(self, tenant_id: int) -> Optional[User]:
+        """Find first user (owner) by tenant ID."""
+        model = self.db.query(UserModel).filter(
+            UserModel.tenant_id == tenant_id,
+            UserModel.deleted_at.is_(None)
+        ).first()
+        return self._to_entity(model) if model else None
     
     def delete(self, user_id: int) -> bool:
         """Delete user (soft delete)."""

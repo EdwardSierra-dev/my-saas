@@ -1,7 +1,7 @@
 """Tenant repository interface."""
 
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, List
 
 from ..entities.tenant import Tenant
 
@@ -23,6 +23,19 @@ class TenantRepository(ABC):
         pass
     
     @abstractmethod
+    def find_by_id(self, tenant_id: int) -> Optional[Tenant]:
+        """
+        Find tenant by ID (alias for get_by_id).
+        
+        Args:
+            tenant_id: Tenant ID
+            
+        Returns:
+            Optional[Tenant]: Tenant if found, None otherwise
+        """
+        pass
+    
+    @abstractmethod
     def get_by_slug(self, slug: str) -> Optional[Tenant]:
         """
         Get tenant by slug.
@@ -32,6 +45,16 @@ class TenantRepository(ABC):
             
         Returns:
             Optional[Tenant]: Tenant if found, None otherwise
+        """
+        pass
+    
+    @abstractmethod
+    def find_all(self) -> List[Tenant]:
+        """
+        Get all tenants.
+        
+        Returns:
+            List[Tenant]: List of all tenants
         """
         pass
     

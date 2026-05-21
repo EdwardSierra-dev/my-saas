@@ -26,7 +26,7 @@ export default function Home() {
           </Link>
 
           <Link
-            href="/auth/customer"
+            href="/customer/register"
             className="block w-full bg-white text-gray-900 py-4 px-6 rounded-xl text-center font-semibold text-lg hover:bg-gray-50 transition-all transform hover:scale-105 shadow-lg border-2 border-gray-200"
           >
             Cliente

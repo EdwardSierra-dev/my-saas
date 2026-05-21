@@ -36,6 +36,19 @@ class UserRepository(ABC):
         pass
     
     @abstractmethod
+    def find_by_email(self, email: str) -> Optional[User]:
+        """
+        Find user by email (alias for get_by_email).
+        
+        Args:
+            email: User email
+            
+        Returns:
+            Optional[User]: User if found, None otherwise
+        """
+        pass
+    
+    @abstractmethod
     def create(self, user: User) -> User:
         """
         Create a new user.
@@ -45,6 +58,19 @@ class UserRepository(ABC):
             
         Returns:
             User: Created user with ID
+        """
+        pass
+    
+    @abstractmethod
+    def save(self, user: User) -> User:
+        """
+        Save a user (create if new, update if exists).
+        
+        Args:
+            user: User entity to save
+            
+        Returns:
+            User: Saved user with ID
         """
         pass
     
@@ -73,6 +99,19 @@ class UserRepository(ABC):
             
         Returns:
             List[User]: List of users
+        """
+        pass
+    
+    @abstractmethod
+    def find_by_tenant_id(self, tenant_id: int) -> Optional[User]:
+        """
+        Find first user (owner) by tenant ID.
+        
+        Args:
+            tenant_id: Tenant ID
+            
+        Returns:
+            Optional[User]: User if found, None otherwise
         """
         pass
     

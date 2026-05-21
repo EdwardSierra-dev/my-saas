@@ -53,3 +53,9 @@ class ConflictError(AppException):
     
     def __init__(self, message: str, code: str = "CONFLICT_ERROR", details: Optional[Dict[str, Any]] = None):
         super().__init__(message, code, 409, details)
+
+
+# Alias for AuthenticationError
+class UnauthorizedError(AuthenticationError):
+    """Exception raised when authentication fails (alias for AuthenticationError)."""
+    pass

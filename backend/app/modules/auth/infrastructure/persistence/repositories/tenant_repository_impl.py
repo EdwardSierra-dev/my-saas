@@ -1,6 +1,6 @@
 """Tenant repository implementation."""
 
-from typing import Optional
+from typing import Optional, List
 from sqlalchemy.orm import Session
 
 from ....domain.entities.tenant import Tenant
@@ -23,6 +23,10 @@ class TenantRepositoryImpl(TenantRepository):
         ).first()
         return self._to_entity(model) if model else None
     
+    def find_by_id(self, tenant_id: int) -> Optional[Tenant]:
+        """Find tenant by ID (alias for get_by_id)."""
+        return self.get_by_id(tenant_id)
+    
     def get_by_slug(self, slug: str) -> Optional[Tenant]:
         """Get tenant by slug."""
         model = self.db.query(TenantModel).filter(
@@ -30,6 +34,13 @@ class TenantRepositoryImpl(TenantRepository):
             TenantModel.deleted_at.is_(None)
         ).first()
         return self._to_entity(model) if model else None
+    
+    def find_all(self) -> List[Tenant]:
+        """Get all tenants."""
+        models = self.db.query(TenantModel).filter(
+            TenantModel.deleted_at.is_(None)
+        ).all()
+        return [self._to_entity(model) for model in models]
     
     def create(self, tenant: Tenant) -> Tenant:
         """Create a new tenant."""

@@ -67,3 +67,12 @@ class ColombiaDepartment(str, Enum):
     VALLE_DEL_CAUCA = "Valle del Cauca"
     VAUPES = "Vaupés"
     VICHADA = "Vichada"
+
+
+class CustomerPreferenceCategory(str, Enum):
+    """Customer preference categories for personalized recommendations."""
+    
+    BEAUTY_AESTHETICS = "beauty_aesthetics"
+    FAST_FOOD = "fast_food"
+    PHARMACY = "pharmacy"
+    SPECIALISTS = "specialists"
