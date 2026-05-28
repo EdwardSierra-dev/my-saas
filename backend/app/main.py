@@ -9,6 +9,7 @@ from app.core.config import settings
 from app.shared.exceptions import AppException
 from app.modules.auth.presentation.api.v1.auth import router as auth_router
 from app.modules.auth.presentation.api.v1.customer import router as customer_router
+from app.modules.auth.presentation.api.v1.customer_features import router as customer_features_router
 from app.modules.auth.presentation.api.v1.business import router as business_router
 
 
@@ -111,6 +112,7 @@ async def general_exception_handler(request: Request, exc: Exception):
 # Include routers
 app.include_router(auth_router, prefix="/api/v1")
 app.include_router(customer_router, prefix="/api/v1")
+app.include_router(customer_features_router, prefix="/api/v1")
 app.include_router(business_router, prefix="/api/v1")
 
 

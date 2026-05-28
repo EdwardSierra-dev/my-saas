@@ -36,11 +36,13 @@ interface Business {
   rating: number | null;
   total_reviews: number;
   created_at: string;
+  is_favorite?: boolean;
 }
 
 export default function CustomerSearch() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [favorites, setFavorites] = useState<Set<number>>(new Set());
   const [filters, setFilters] = useState({
     query: "",
     business_type: "",
@@ -67,9 +69,92 @@ export default function CustomerSearch() {
     }
     
     setIsAuthenticated(true);
-    // Load businesses on mount
+    // Load favorites and businesses on mount
+    loadFavorites();
     searchBusinesses();
   }, [router]);
+
+  const loadFavorites = async () => {
+    try {
+      const token = localStorage.getItem("access_token");
+      const response = await fetch(`http://localhost:8000/api/v1/customers/favorites`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        const favoriteIds = new Set(data.map((fav: any) => fav.business_id));
+        setFavorites(favoriteIds);
+      }
+    } catch (error) {
+      console.error("Error loading favorites:", error);
+    }
+  };
+
+  const toggleFavorite = async (businessId: number, e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation to business detail
+    e.stopPropagation();
+    
+    const token = localStorage.getItem("access_token");
+    const isFavorite = favorites.has(businessId);
+    
+    try {
+      if (isFavorite) {
+        // Remove from favorites
+        const favoritesList = await fetch(`http://localhost:8000/api/v1/customers/favorites`, {
+          headers: { Authorization: `Bearer ${token}` },
+        }).then(res => res.json());
+        
+        const favoriteItem = favoritesList.find((fav: any) => fav.business_id === businessId);
+        
+        if (favoriteItem) {
+          const response = await fetch(
+            `http://localhost:8000/api/v1/customers/favorites/${favoriteItem.id}`,
+            {
+              method: "DELETE",
+              headers: { Authorization: `Bearer ${token}` },
+            }
+          );
+          
+          if (response.ok) {
+            setFavorites(prev => {
+              const newSet = new Set(prev);
+              newSet.delete(businessId);
+              return newSet;
+            });
+          }
+        }
+      } else {
+        // Add to favorites
+        if (favorites.size >= 10) {
+          alert("Maximum 10 favorites allowed");
+          return;
+        }
+        
+        const response = await fetch(`http://localhost:8000/api/v1/customers/favorites`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ business_id: businessId }),
+        });
+        
+        if (response.ok) {
+          setFavorites(prev => new Set(prev).add(businessId));
+        } else if (response.status === 409) {
+          alert("Business already in favorites");
+        } else if (response.status === 400) {
+          alert("Maximum 10 favorites allowed");
+        }
+      }
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+      alert("Failed to update favorite");
+    }
+  };
 
   const searchBusinesses = async (page = 1) => {
     setIsLoading(true);
@@ -275,57 +360,58 @@ export default function CustomerSearch() {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {businesses.map((business) => (
-                <Link
+                <div
                   key={business.id}
-                  href={`/customer/business/${business.id}`}
-                  className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 cursor-pointer"
+                  className="bg-white rounded-lg shadow hover:shadow-lg transition-shadow relative"
                 >
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                        {business.name}
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        {getBusinessTypeLabel(business.business_type)}
-                      </p>
-                    </div>
-                    {business.rating && (
-                      <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded">
-                        <span className="text-yellow-600">⭐</span>
-                        <span className="text-sm font-semibold text-gray-900">
-                          {business.rating.toFixed(1)}
-                        </span>
+                  {/* Favorite Button */}
+                  <button
+                    onClick={(e) => toggleFavorite(business.id, e)}
+                    className="absolute top-4 right-4 z-10 p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-all"
+                    title={favorites.has(business.id) ? "Remove from favorites" : "Add to favorites"}
+                  >
+                    <svg
+                      className={`w-6 h-6 transition-colors ${
+                        favorites.has(business.id)
+                          ? "fill-red-500 text-red-500"
+                          : "fill-none text-gray-400 hover:text-red-500"
+                      }`}
+                      stroke="currentColor"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                      />
+                    </svg>
+                  </button>
+
+                  <Link
+                    href={`/customer/business/${business.id}`}
+                    className="block p-6 cursor-pointer"
+                  >
+                    <div className="flex items-start justify-between mb-3 pr-8">
+                      <div className="flex-1">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                          {business.name}
+                        </h3>
+                        <p className="text-sm text-gray-600">
+                          {getBusinessTypeLabel(business.business_type)}
+                        </p>
                       </div>
-                    )}
-                  </div>
-
-                  <div className="space-y-2 text-sm text-gray-600">
-                    <div className="flex items-center gap-2">
-                      <svg
-                        className="w-4 h-4"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                      <span>
-                        {business.city}, {business.department}
-                      </span>
+                      {business.rating && (
+                        <div className="flex items-center gap-1 bg-yellow-50 px-2 py-1 rounded">
+                          <span className="text-yellow-600">⭐</span>
+                          <span className="text-sm font-semibold text-gray-900">
+                            {business.rating.toFixed(1)}
+                          </span>
+                        </div>
+                      )}
                     </div>
 
-                    {business.phone && (
+                    <div className="space-y-2 text-sm text-gray-600">
                       <div className="flex items-center gap-2">
                         <svg
                           className="w-4 h-4"
@@ -337,26 +423,53 @@ export default function CustomerSearch() {
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth={2}
-                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                           />
                         </svg>
-                        <span>{business.phone}</span>
+                        <span>
+                          {business.city}, {business.department}
+                        </span>
                       </div>
-                    )}
 
-                    {business.total_reviews > 0 && (
-                      <div className="text-xs text-gray-500">
-                        {business.total_reviews} reviews
-                      </div>
-                    )}
-                  </div>
+                      {business.phone && (
+                        <div className="flex items-center gap-2">
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                            />
+                          </svg>
+                          <span>{business.phone}</span>
+                        </div>
+                      )}
 
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <span className="text-primary-600 text-sm font-medium hover:text-primary-700">
-                      View Details →
-                    </span>
-                  </div>
-                </Link>
+                      {business.total_reviews > 0 && (
+                        <div className="text-xs text-gray-500">
+                          {business.total_reviews} reviews
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-4 pt-4 border-t border-gray-200">
+                      <span className="text-primary-600 text-sm font-medium hover:text-primary-700">
+                        View Details →
+                      </span>
+                    </div>
+                  </Link>
+                </div>
               ))}
             </div>
 
